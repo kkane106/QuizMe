@@ -30,6 +30,15 @@ public class Quiz {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
+	public Quiz(List<Question> questions, String quizName, String description, Date dateCreated, String author) {
+		super();
+		this.questions = questions;
+		this.quizName = quizName;
+		this.description = description;
+		this.dateCreated = dateCreated;
+		this.author = author;
+	}
+
 	public List<Question> getQuestions() {
 		return questions;
 	}

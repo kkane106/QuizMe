@@ -9,6 +9,7 @@ public class QuizController {
 	@RequestMapping("/getQuiz")
 	public Quiz getQuiz(@RequestParam("quizName") String quizName){
 		
+	
 		return null;
 	}
 	

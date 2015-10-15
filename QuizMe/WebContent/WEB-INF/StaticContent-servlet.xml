@@ -22,5 +22,14 @@
                  <value>.jsp</value>
               </property>
     </bean>
-
+    
+   	<bean id="viewResolver1"
+    	      class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+              <property name="prefix">
+                  <value>/htdocs/</value>
+               </property>
+              <property name="suffix">
+                 <value>.html</value>
+              </property>
+    </bean>
 </beans>
