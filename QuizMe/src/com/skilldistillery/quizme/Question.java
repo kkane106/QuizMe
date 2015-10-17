@@ -3,6 +3,7 @@ package com.skilldistillery.quizme;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,13 +22,13 @@ public class Question {
 	@ManyToOne
 	Quiz parentQuiz;
 	
-	@OneToMany
+	@OneToMany(cascade=CascadeType.PERSIST)
 	List<AnswerChoice> answerChoices;
 	private String questionText;
 	public List<AnswerChoice> getCorrectAnswer(){
 		ArrayList<AnswerChoice> correctAnswers = new ArrayList<AnswerChoice>();
 		for(AnswerChoice ac : answerChoices){
-			if(ac.isCorrect()){
+			if(ac.isRight()){
 				correctAnswers.add(ac);
 			}
 		}

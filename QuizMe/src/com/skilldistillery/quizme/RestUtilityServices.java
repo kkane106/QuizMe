@@ -3,6 +3,7 @@ package com.skilldistillery.quizme;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -60,13 +61,22 @@ public class RestUtilityServices {
 	public boolean submitQuiz(@RequestParam("quiz") String json){
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			mapper.readValue(json, Quiz.class);
+			Quiz q = mapper.readValue(json, Quiz.class);
+			for(Question question : q.getQuestions()){
+				question.setParentQuiz(q);
+			}
+			
+			q.setDateCreated(new Date());
+			QuizDAO quizDAO = new QuizDAO();
+			quizDAO.persistQuiz(q);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
+			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
+		return true;
 	}
 }
 

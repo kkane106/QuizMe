@@ -15,9 +15,9 @@ public class AnswerChoice {
 	private long id;
 	
 	private String answerText;
-	private boolean isRight;
+	private Boolean isRight;
 	
-	public boolean isCorrect(){
+	public Boolean getIsRight(){
 		return isRight;
 	}
 	
@@ -33,7 +33,7 @@ public class AnswerChoice {
 		return isRight;
 	}
 
-	public void setRight(boolean isRight) {
+	public void setIsRight(boolean isRight) {
 		this.isRight = isRight;
 	}
 

@@ -1,7 +1,6 @@
 package com.skilldistillery.quizme.test;
 
 import static org.junit.Assert.*;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,7 +15,7 @@ public class QuizDaoTest {
 	
 	@Test
 	public void testFind() {
-		fail("Not yet implemented");
+		quizDAO.em.createNamedQuery("findQuizByName").setParameter("name", "Test").getResultList();
 	}
 
 	@Test
