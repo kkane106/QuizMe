@@ -7,11 +7,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Persistence;
 
-@NamedQueries({
-	@NamedQuery(name = "Quiz.getQuizzesByName", query = "Select q from Quiz q where q.quizName = :name"),
 
-	@NamedQuery(name = "Quiz.getQuizByNameAndAuthor", query = "Select q from Quiz q where q.quizName = :name and q.author= :author")  
-})
 public class QuizDAO {
 	public EntityManager em = Persistence.createEntityManagerFactory("QuizMe").createEntityManager();
 	

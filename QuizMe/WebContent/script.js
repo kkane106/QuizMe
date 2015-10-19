@@ -16,6 +16,28 @@ $( document ).ready(function() {
 		});
 	});
 	
+	$("searchButton").click(function(event){
+		var searchTerm = $("searchButton").val();
+		$.ajax("rest/searchQuizzes?q="+searchTerm, {
+			success: function(data, textStatus, jqXHR){
+				//I expect an array of Quiz Names, Authors, and Date Created
+				for(var shortQuiz in data){
+					
+				}
+				
+			}
+		})
+		
+		//Populate the recents table!
+		$.ajax("/rest/recentQuizzes", {
+			success: function(data, textStatus, jqXHR){
+				for(quiz in data){
+					
+				}
+			}
+		});
+	});
+	
 	$("body").on('click', '#submitQuizButton', function(event){
 		var quiz = {};
 		quiz.quizName = $("#quizName").val();
@@ -42,6 +64,10 @@ $( document ).ready(function() {
 			success: function(data, textStatus, jqXHR){
 				console.log(data);
 				console.log(textStatus);
+				
+				if(data === false){
+					alert("Error Quiz Name and Author already exist. One must be unique");
+				}
 			}
 		});
 	});

@@ -6,11 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class QuizController {
-	@RequestMapping("/takeQuiz/{quizName}")
-	public Quiz getQuiz(@PathVariable("quizName") String quizName){
-		
+	@RequestMapping("/takeQuiz/{quizAuthor}/{quizName}")
+	public Quiz getQuiz(@PathVariable("quizAuthor") String quizAuthor, @PathVariable("quizName") String quizName){
+		QuizDAO quizDAO = new QuizDAO();
+		Quiz q = (Quiz) quizDAO.em.createNamedQuery("Quiz.getQuizByNameAndAuthor")
+		.setParameter("quizAuthor", quizAuthor)
+		.setParameter("quizName", quizName).getResultList().get(0);
 	
-		return null;
+		return q;
 	}
 	
 	

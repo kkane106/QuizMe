@@ -3,8 +3,10 @@ package com.skilldistillery.quizme;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -67,8 +69,21 @@ public class RestUtilityServices {
 			}
 			
 			q.setDateCreated(new Date());
+			
 			QuizDAO quizDAO = new QuizDAO();
-			quizDAO.persistQuiz(q);
+			//Check to make sure Author and QuizName pair is unique
+			 Vector<Quiz> quizzes = (Vector<Quiz>) quizDAO.em.createNamedQuery("Quiz.getQuizByNameAndAuthor")
+			.setParameter("name", q.getQuizName())
+			.setParameter("author", q.getAuthor())
+			.getResultList();
+			
+			 
+			//Persist if there are no results;	
+			if(quizzes.size() <= 0){ 
+				quizDAO.persistQuiz(q);
+			}else{
+				return false;
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return false;
@@ -77,6 +92,19 @@ public class RestUtilityServices {
 			return false;
 		}
 		return true;
+	}
+	
+	@RequestMapping("/searchQuiz")
+	public Vector<Quiz> search(@RequestParam("q") String query){
+		QuizDAO quizDAO = new QuizDAO();
+		return (Vector<Quiz>) quizDAO.em.createNamedQuery("Quiz.getQuizzesByName").setParameter("name", query).getResultList();
+	}
+	
+	@RequestMapping("/recentQuizzes")
+	public Vector<Quiz> getRecentQuizzes(){
+		QuizDAO quizDAO = new QuizDAO();
+		Vector<Quiz> recentQuizzes = (Vector<Quiz>) quizDAO.em.createNamedQuery("Quiz.getRecentQuizzes").setParameter("limit", 10).setMaxResults(10).getResultList();
+		return recentQuizzes;
 	}
 }
 
