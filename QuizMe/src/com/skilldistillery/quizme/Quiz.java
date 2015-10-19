@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+
 @Entity
 @Table
 @NamedQueries({
@@ -27,7 +30,6 @@ import javax.persistence.TemporalType;
 })
 public class Quiz {
 	
-	
 	@OneToMany(cascade=CascadeType.PERSIST)
 	private List<Question> questions;
 	private String quizName, description;
@@ -35,7 +37,11 @@ public class Quiz {
 	@Temporal(TemporalType.DATE)
 	private Date dateCreated;
 	private String author;
-	
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;

@@ -110,5 +110,8 @@ button {
 	width: 300px;
 }	 */
 	
-	
+	#recentQuizTable{
+		text-align: center;
+		border: solid 1px;
+	}
 }

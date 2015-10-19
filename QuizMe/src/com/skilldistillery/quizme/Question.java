@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 @Entity
 @Table
 public class Question {
@@ -19,8 +22,8 @@ public class Question {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@ManyToOne
-	Quiz parentQuiz;
+
+	
 	
 	@OneToMany(cascade=CascadeType.PERSIST)
 	List<AnswerChoice> answerChoices;
@@ -41,14 +44,12 @@ public class Question {
 
 	public Question(Quiz parentQuiz, List<AnswerChoice> answerChoices) {
 		super();
-		this.parentQuiz = parentQuiz;
 		this.answerChoices = answerChoices;
 	}
 
 	public Question(long id, Quiz parentQuiz, List<AnswerChoice> answerChoices) {
 		super();
 		this.id = id;
-		this.parentQuiz = parentQuiz;
 		this.answerChoices = answerChoices;
 	}
 
@@ -58,14 +59,6 @@ public class Question {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public Quiz getParentQuiz() {
-		return parentQuiz;
-	}
-
-	public void setParentQuiz(Quiz parentQuiz) {
-		this.parentQuiz = parentQuiz;
 	}
 
 	public List<AnswerChoice> getAnswerChoices() {

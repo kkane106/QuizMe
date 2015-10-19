@@ -64,9 +64,6 @@ public class RestUtilityServices {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			Quiz q = mapper.readValue(json, Quiz.class);
-			for(Question question : q.getQuestions()){
-				question.setParentQuiz(q);
-			}
 			
 			q.setDateCreated(new Date());
 			
@@ -103,8 +100,28 @@ public class RestUtilityServices {
 	@RequestMapping("/recentQuizzes")
 	public Vector<Quiz> getRecentQuizzes(){
 		QuizDAO quizDAO = new QuizDAO();
-		Vector<Quiz> recentQuizzes = (Vector<Quiz>) quizDAO.em.createNamedQuery("Quiz.getRecentQuizzes").setParameter("limit", 10).setMaxResults(10).getResultList();
-		return recentQuizzes;
+		Vector<Quiz> recentQuiz = (Vector<Quiz>) quizDAO.em.createNamedQuery("Quiz.getQuizzesByDate").setMaxResults(10).getResultList();
+		return recentQuiz;
+	}
+	
+	@RequestMapping("/quizPanel")
+	@ResponseBody
+	public String getQuizPanel(HttpServletRequest request){
+		ServletContext context = request.getServletContext();
+
+		try {
+			ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(Paths.get(context.getRealPath("/quiz.html")));
+			String line = "";
+			for(String s: lines){
+				line += s;
+			}
+			
+			return line;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
+
 	}
 }
 

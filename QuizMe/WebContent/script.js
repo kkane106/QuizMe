@@ -1,3 +1,4 @@
+var quiz;
 
 $( document ).ready(function() {
 	$("#newQuestionButton").click(function(){
@@ -26,16 +27,9 @@ $( document ).ready(function() {
 				}
 				
 			}
-		})
-		
-		//Populate the recents table!
-		$.ajax("/rest/recentQuizzes", {
-			success: function(data, textStatus, jqXHR){
-				for(quiz in data){
-					
-				}
-			}
 		});
+		
+
 	});
 	
 	$("body").on('click', '#submitQuizButton', function(event){
@@ -71,5 +65,57 @@ $( document ).ready(function() {
 			}
 		});
 	});
+	
+	$('body').on('click', '.quizName',  function(event){
+		var element = event.target;
+		var quizId = $(element).attr("quizId");
+		var quizAuthor = $(element).attr("author");
+		var quizPanel;
+		
 
+		
+		$.ajax("rest/quizPanel",{
+			success: function(data, textStatus, jqXHR){
+				quizPanel = data;
+				$("#contentPane").empty();
+				//Now pull down the actual quiz and work with that
+				$.ajax("rest/takeQuiz/"+quizAuthor+"/"+quizId, {
+					success: function(data1, textStatus, jqXHR){
+						quiz = JSON.parse(data1);
+						console.log(quiz);
+					}
+				});
+			}
+		});
+		
+		
+	});
+	
+	
+	$('body').on('hover', '.quizName',  function(event){
+		
+	});
+	
+	init();
 });
+
+function init(){
+	//Populate the recents table!
+	$.ajax("rest/recentQuizzes", {
+		success: function(data, textStatus, jqXHR){
+			console.log(data);
+			$("#recentQuizTable").append("<tr><td><b>Quiz Title</b></td><td><b>Quiz Author</b></td></tr>")
+			$("#recentQuizTable").append("<tr><td colspan='2'>&nbsp</td></tr>")
+			for(var i = 0; i < data.length; i++){
+				$("#recentQuizTable").append("<tr><td class='quizName' author="+ data[i].author +" quizId="+data[i].id+">"+data[i].quizName +"</td><td>"+ data[i].author+"</td></tr>");
+				$("#recentQuizTable").append("<tr><td colspan='2' class = 'quizDescription'>"+data[i].description+"</td></tr>");
+				$("#recentQuizTable").append("<tr><td colspan='2'>&nbsp</td></tr>");
+			}
+		}
+	});
+	
+
+	
+	
+}
+
