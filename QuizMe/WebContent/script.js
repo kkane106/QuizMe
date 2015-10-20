@@ -71,9 +71,7 @@ $( document ).ready(function() {
 		var quizId = $(element).attr("quizId");
 		var quizAuthor = $(element).attr("author");
 		var quizPanel;
-		
 
-		
 		$.ajax("rest/quizPanel",{
 			success: function(data, textStatus, jqXHR){
 				quizPanel = data;
@@ -81,8 +79,8 @@ $( document ).ready(function() {
 				//Now pull down the actual quiz and work with that
 				$.ajax("rest/takeQuiz/"+quizAuthor+"/"+quizId, {
 					success: function(data1, textStatus, jqXHR){
-						quiz = JSON.parse(data1);
-						console.log(quiz);
+						quiz = data1;
+						displayQuiz($("#contentPane"));
 					}
 				});
 			}
@@ -113,9 +111,105 @@ function init(){
 			}
 		}
 	});
+}
+
+function displayQuiz(root){
+	var longDate = new Date(quiz.dateCreated);
+	var month = longDate.getUTCMonth()+1;
+	var day = longDate.getUTCDate();
+	var year = longDate.getUTCFullYear();
+	
+	var date = month + "-" + day + "-" + year;
+	
+	var quizHeader = "<div id='quizHeader'>" +
+			"<table>" +
+				"<tr><td id='quizTitle'><h2>"+quiz.quizName+"</h2></td><td> &nbsp </td> <td>"+quiz.author+" </td></tr>" +
+				"<tr><td> Date Created: "+ date +"</td> <td colspan = '2'> Description: "+ quiz.description +" </tr>"+
+			"</table>" +
+			" </div>";
+	
+	root.append(quizHeader);
+	
+	root.append("<div id='questionDiv'>" +
+			"<button id='startQuizButton' onClick='startQuiz()'> Start Quiz </button>" +
+			" </div>");
+}
+
+function startQuiz(){
+	$("#startQuizButton").remove();
+	var questionCounter = 1;
+	var questionPanel = $("#questionDiv");
+	var questions = quiz.questions;
+	quiz.questionCounter = 0;
+	var submitQuiz = false;
+	
+	displayQuestion(questions[quiz.questionCounter]);
+	
+}
+
+function displayQuestion(question){
+	questionPanel = $("#questionDiv");
+	questionPanel.append("<h3>"+question.questionText+"</h3>");
+	questionPanel.append("<ul>");
+	for(var i = 0; i < question.answerChoices.length; i++){
+		questionPanel.append("<li>"+question.answerChoices[i].answerText+"<input class='answerChoice' type='checkbox'></li>");
+	}
+	questionPanel.append("</ul>");
+	questionPanel.append("<button id='prevQuestion' onClick = 'prevQuestion()'>Prev</button><button id='nextQuestion' onClick='nextQuestion()'>Next</button>");
+	
+}
+
+function nextQuestion(){
+	if(quiz.questionCounter < quiz.questions.length - 1){
+		$("#questionDiv").empty();
+	
+	
+		var chosenAnswers = quiz.questions[quiz.questionCounter].chosenAnswers = [];
+		$(".answerChoice :checkbox:checked").each(function(){
+			chosenAnswers.add(this.prev().val());
+		});
 	
 
+		displayQuestion(quiz.questions[++quiz.questionCounter]);
+	}else if($("#nextQuestion").attr("submit") === "true"){
+		var div = $("#questionDiv");
+		//Show results
+		$("#questionDiv").empty();
+		$("#questionDiv").append("<h1> " + quiz.quizName + " Results: </h1>");
+		
+		var questionsRight = calculateRightQuestions();
+		div.append()
+	}else{
+		$("#nextQuestion").html("Submit!")
+		$("#nextQuestion").attr("submit", true);
+	}
 	
 	
 }
 
+function prevQuestion(){
+	if(quiz.questionCounter > 0){
+		$("#questionDiv").empty();
+	
+
+	var chosenAnswers = quiz.questions[quiz.questionCounter].chosenAnswers = [];
+	$(".answerChoice :checkbox:checked").each(function(){
+		chosenAnswers.add(this.prev().val());
+	});
+	
+
+		displayQuestion(quiz.questions[--quiz.questionCounter]);
+	}
+}
+
+function calculateRightAnswers(){
+	for(var i = 0; i < quiz.questions.length; i++){
+		var chosenAnswers = quiz.questions[i].chosenAnswers;
+		var answerChoices = quiz.questions[i].answerChoices;
+		
+		for(var c = 0; c < chosenAnswers.length; c++){
+			
+		}
+		
+	}
+}
